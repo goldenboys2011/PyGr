@@ -4,9 +4,9 @@ import re
 import requests
 import shutil
 
-app_version = 1.0
+app_version = 1.1
 version_url = "https://raw.githubusercontent.com/goldenboys2011/PyGr/refs/heads/main/update/version.json"
-update_url = "https://goldencube.dev/file.exe"
+update_url = "https://raw.githubusercontent.com/goldenboys2011/PyGr/refs/heads/main/update/pygrRunner.py"
 
 
 translation_dict = {
@@ -234,23 +234,30 @@ def download_and_replace():
         response = requests.get(update_url, stream=True, timeout=10)
         response.raise_for_status()
 
-        file_size = int(response.headers.get("content-length", 0))
-        if file_size < 10000:
-            print("Update file seems too small. Aborting update.")
-            return
+        #file_size = int(response.headers.get("content-length", 0))
+        #if file_size < 10000:
+            #print("Update file seems too small. Aborting update.")
+            #return
+        
+        # For Python File
+        with open("pygrRunner.py", "w", encoding="utf-8") as file:
+            file.write(response.text)
 
-        with open("pygrRunner.py", "wb") as file:
-            shutil.copyfileobj(response.raw, file)
-
+        # For builded file
+      # with open("pygrRunner.exe", "wb") as file:
+      #     shutil.copyfileobj(response.raw, file)
+    
         print("Update downloaded successfully.")
 
-        shutil.move("translate_and_run.exe", sys.argv[0])
+        shutil.move("pygrRunner.py", sys.argv[0])
         print("Update applied successfully! Restarting...")
         
         os.execv(sys.argv[0], sys.argv)
+        sys.exit(1)
 
     except Exception as e:
         print(f"Update failed: {e}")
+        sys.exit(1)
 
 
 def main():
@@ -278,8 +285,10 @@ def main():
 
                 if latest_version > app_version:
                     print(f"Update Found! Downloading version {latest_version}")
+                    download_and_replace()
                 else:
                     print("You have got the latest version of PyGR")
+                    sys.exit(1)
                     
     if not os.path.isfile(script_path):
         print(f"File {script_path} not found. Current directory: {os.getcwd()}")
