@@ -4,7 +4,7 @@ import re
 import requests
 import shutil
 
-app_version = 1.1
+app_version = 1.2
 version_url = "https://raw.githubusercontent.com/goldenboys2011/PyGr/refs/heads/main/update/version.json"
 update_url = "https://raw.githubusercontent.com/goldenboys2011/PyGr/refs/heads/main/update/pygrRunner.py"
 
@@ -269,10 +269,10 @@ def main():
     
     if script_path.startswith("--") and not script_path.endswith(".pygr"):
         if script_path == "--update" or script_path == "--u":
-            update = input("Would you like to update the software now? (Y/N) ")
+            update = input("Would you like to update the software now? (Y/N) ").upper()
             
             while update != "Y" and update != "N":
-                update = input("Would you like to update the software now? (Y/N) ")
+                update = input("Would you like to update the software now? (Y/N) ").upper()
             
             if update == "N":
                 print("Understanable. Have a great day!")
